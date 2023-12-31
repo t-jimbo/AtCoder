@@ -11,6 +11,10 @@ path="src/1_yokan.rs"
 name="2"
 path="src/2_parentheses.rs"
 
+[[bin]]
+name="4"
+path= "src/4_cross_sum.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
