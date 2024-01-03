@@ -2,7 +2,6 @@ use proconio::input;
 
 type Graph = Vec<Vec<usize>>;
 
-// FIXME: どこが間違ってるのかよくわからない
 fn main() {
     input! {
         n: usize,
@@ -10,11 +9,11 @@ fn main() {
     }
 
     // 双方向グラフを作成
-    let mut graph: Graph = vec![vec![0; n]; n];
+    let mut graph: Graph = vec![vec![]; n];
     for i in 0..n - 1 {
         let (a, b) = ab[i];
-        graph[a - 1][b - 1] = 1;
-        graph[b - 1][a - 1] = 1;
+        graph[a - 1].push(b - 1);
+        graph[b - 1].push(a - 1);
     }
 
     // 最も遠い点P
@@ -34,8 +33,8 @@ fn dfs(graph: &Graph, s: usize) -> Vec<i32> {
 
     while stack.len() > 0 {
         let v = stack.pop().unwrap();
-        for i in 0..graph[v].len() {
-            if graph[v][i] == 1 && dist[i] == -1 {
+        for &i in graph[v].iter() {
+            if dist[i] == -1 {
                 stack.push(i);
                 dist[i] = dist[v] + 1;
             }
