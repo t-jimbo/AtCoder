@@ -17,29 +17,38 @@ fn main() {
     }
 
     // 最も遠い点P
-    let (_, p) = dfs(&graph, 0);
-    println!("P: {}", p);
-    let (r, _) = dfs(&graph, p);
+    let dist = dfs(&graph, 0);
+    let (max_i, _) = max(dist);
+
+    let rs = dfs(&graph, max_i);
+    let (_, r) = max(rs);
     println!("{}", r + 1);
 }
 
 // depth first searchで最も遠いノードと距離を求める
-fn dfs(graph: &Graph, s: usize) -> (usize, usize) {
+fn dfs(graph: &Graph, s: usize) -> Vec<i32> {
     let mut stack: Vec<usize> = vec![s];
-    let mut dist = 0;
-    let mut prev = 0;
+    let mut dist = vec![-1; graph.len()];
+    dist[s] = 0;
 
     while stack.len() > 0 {
         let v = stack.pop().unwrap();
         for i in 0..graph[v].len() {
             // FIXME
-            if i != prev && graph[v][i] == 1 {
+            if graph[v][i] == 1 && dist[i] == -1 {
                 stack.push(i);
-                dist += 1;
+                dist[i] = dist[v] + 1;
             }
         }
-        prev = v;
     }
 
-    (dist, prev)
+    dist
+}
+
+// 最小値とそのindexを返す(最小値は-1とする)
+fn max(arr: Vec<i32>) -> (usize, i32) {
+    arr.iter().enumerate().fold(
+        (0, -1),
+        |(max_i, max), (i, v)| if v > &max { (i, *v) } else { (max_i, max) },
+    )
 }
