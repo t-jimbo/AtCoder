@@ -2,6 +2,7 @@ use proconio::input;
 
 type Graph = Vec<Vec<usize>>;
 
+// FIXME: どこが間違ってるのかよくわからない
 fn main() {
     input! {
         n: usize,
@@ -34,7 +35,6 @@ fn dfs(graph: &Graph, s: usize) -> Vec<i32> {
     while stack.len() > 0 {
         let v = stack.pop().unwrap();
         for i in 0..graph[v].len() {
-            // FIXME
             if graph[v][i] == 1 && dist[i] == -1 {
                 stack.push(i);
                 dist[i] = dist[v] + 1;
