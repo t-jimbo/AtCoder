@@ -19,6 +19,10 @@ path = "src/3_longest_circular_road.rs"
 name = "4"
 path = "src/4_cross_sum.rs"
 
+[[bin]]
+name = "7"
+path = "src/7_cp_classes.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
