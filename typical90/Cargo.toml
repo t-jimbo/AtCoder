@@ -28,6 +28,10 @@ name = "10"
 path = "src/10_store_sum_queries.rs"
 
 [[bin]]
+name = "14"
+path = "src/14_sing_together.rs"
+
+[[bin]]
 name = "22"
 path = "src/22_cubic_cake.rs"
 
