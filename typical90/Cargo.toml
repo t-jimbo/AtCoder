@@ -4,24 +4,24 @@ version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "1"
-path = "src/1_yokan.rs"
+name = "01"
+path = "src/01_yokan.rs"
 
 [[bin]]
-name = "2"
-path = "src/2_parentheses.rs"
+name = "02"
+path = "src/02_parentheses.rs"
 
 [[bin]]
-name = "3"
-path = "src/3_longest_circular_road.rs"
+name = "03"
+path = "src/03_longest_circular_road.rs"
 
 [[bin]]
-name = "4"
-path = "src/4_cross_sum.rs"
+name = "04"
+path = "src/04_cross_sum.rs"
 
 [[bin]]
-name = "7"
-path = "src/7_cp_classes.rs"
+name = "07"
+path = "src/07_cp_classes.rs"
 
 [[bin]]
 name = "10"
