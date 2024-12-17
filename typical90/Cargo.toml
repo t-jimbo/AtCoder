@@ -27,6 +27,10 @@ path = "src/7_cp_classes.rs"
 name = "10"
 path = "src/10_store_sum_queries.rs"
 
+[[bin]]
+name = "22"
+path = "src/22_cubic_cake.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
