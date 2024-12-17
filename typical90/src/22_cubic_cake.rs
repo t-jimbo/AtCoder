@@ -7,24 +7,22 @@ fn main() {
         h: usize,
     }
 
-    std::println!("{}", cut(w, d, h));
+    // 最大公約数の立方体になるようにすればよさそう
+    let _gcd = calc_gcd(w, d);
+    let gcd = calc_gcd(h, _gcd);
+
+    let ans = w / gcd + d / gcd + h / gcd - 3;
+
+    std::println!("{}", ans);
 }
 
-fn cut(w: usize, d: usize, h: usize) -> usize {
-    if w == d && d == h {
-        return 0;
+// 2つの数の最大公約数を互除法で求める
+fn calc_gcd(a: usize, b: usize) -> usize {
+    let r = a % b;
+
+    if r == 0 {
+        return b;
     }
 
-    if w == d && h % d == 0 {
-        return h / d - 1;
-    }
-    if d == h && w % h == 0 {
-        return w / h - 1;
-    }
-    if h == w && d % w == 0 {
-        return d / w - 1;
-    }
-
-    // 全カット
-    w + d + h - 3
+    calc_gcd(b, r)
 }
