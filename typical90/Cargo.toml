@@ -31,6 +31,10 @@ path = "src/10_store_sum_queries.rs"
 name = "22"
 path = "src/22_cubic_cake.rs"
 
+[[bin]]
+name = "24"
+path = "src/24_select_one.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
