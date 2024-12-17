@@ -34,4 +34,4 @@ path = "src/22_cubic_cake.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-proconio = "0.4.5"
+proconio = "0.5.0"
