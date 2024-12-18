@@ -1,34 +1,34 @@
 use proconio::input;
+use std::cmp;
 
 fn main() {
     input! {
         n: usize,
-        mut coins: [usize; 3],
+        a: usize,
+        b: usize,
+        c: usize,
     }
 
-    // a, b, cを使って最小の枚数でnを満たす
-    coins.sort();
-    let a = coins[0];
-    let b = coins[1];
-    let c = coins[2];
+    let min1 = solve(a, b, c, n);
+    let min2 = solve(b, c, a, n);
+    let min3 = solve(c, a, b, n);
 
+    let min12 = cmp::min(min1, min2);
+    let min = cmp::min(min12, min3);
 
-    let (n_a, n_b, n_c) = solve(a, b, c, n);
-
-    std::println!("{}, {}, {}", a, b, c);
-    std::println!("{}, {}, {}", n_a, n_b, n_c);
-    std::println!("{}", n_a + n_b + n_c)
+    std::println!("{}", min)
 }
 
-fn solve(a: usize, b: usize, c: usize, n: usize) -> (usize, usize, usize) {
+fn solve(a: usize, b: usize, c: usize, n: usize) -> usize {
     // cで割れるだけ割る
     let r_c = n % c;
     let n_c = n / c;
     if r_c == 0 {
-        return (0, 0, n_c);
+        return n_c;
     }
 
-    div_abc(r_c, b, c, n_c, a)
+    let (n_a, n_b, n_c) = div_abc(r_c, b, c, n_c, a);
+    n_a + n_b　+ n_c
 }
 
 fn div_ab(p: usize, a: usize, b: usize, n_b: usize) -> Option<(usize, usize)> {
