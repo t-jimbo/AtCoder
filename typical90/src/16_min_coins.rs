@@ -28,7 +28,7 @@ fn solve(a: usize, b: usize, c: usize, n: usize) -> usize {
     }
 
     let (n_a, n_b, n_c) = div_abc(r_c, b, c, n_c, a);
-    n_a + n_b　+ n_c
+    n_a + n_b + n_c
 }
 
 fn div_ab(p: usize, a: usize, b: usize, n_b: usize) -> Option<(usize, usize)> {
