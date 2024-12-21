@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use proconio::input;
 
 fn main() {
@@ -7,16 +6,25 @@ fn main() {
         h: [usize; n],
     }
 
+    // 考えられる間隔についてループ回す
+    let mut max = 1;
+    for m in 1..n {
+        // 開始位置sに関するループ
+        for s in 0..(n - m) {
+            // 何回連続できるかをカウント
+            let mut count = 1;
+            for j in (s + 1..n).step_by(m) {
+                if h[j] != h[s] {
+                    break;
+                }
+                count += 1;
+            };
 
-    // 1. 高さをkeyとして、ビルのindexの配列をつくる
-    let mut builgings: HashMap<usize, Vec<usize>> = HashMap::new();
-    for i in n {
-        builgings.insert(h[i], i);
-    }
-
-    let mut max = 0;
-    // 2. それぞれに対して等間隔で最大いくつになるかチェックする
-    for (_, indexes) in builgings.iter() {
-        // 1, 3, 5, 8
-    }
+            // 最大値更新
+            if max < count {
+                max = count;
+            }
+        }
+    };
+    println!("{}", max)
 }
