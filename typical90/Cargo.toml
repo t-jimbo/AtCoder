@@ -40,6 +40,10 @@ name = "18"
 path = "src/18_statue.rs"
 
 [[bin]]
+name = "20"
+path = "src/20_log_inequality.rs"
+
+[[bin]]
 name = "22"
 path = "src/22_cubic_cake.rs"
 
