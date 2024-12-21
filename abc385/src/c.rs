@@ -13,7 +13,7 @@ fn main() {
         for s in 0..(n - m) {
             // 何回連続できるかをカウント
             let mut count = 1;
-            for j in (s + 1..n).step_by(m) {
+            for j in (s + m..n).step_by(m) {
                 if h[j] != h[s] {
                     break;
                 }
