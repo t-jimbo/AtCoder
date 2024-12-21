@@ -9,67 +9,70 @@ fn main() {
         c: usize,
     }
 
-    let min1 = solve(a, b, c, n);
-    let min2 = solve(b, c, a, n);
-    let min3 = solve(c, a, b, n);
-
-    let min12 = cmp::min(min1, min2);
-    let min = cmp::min(min12, min3);
+    let min = solve2(b, c, a, n);
 
     std::println!("{}", min)
 }
 
-fn solve(a: usize, b: usize, c: usize, n: usize) -> usize {
-    // cで割れるだけ割る
-    let r_c = n % c;
-    let n_c = n / c;
-    if r_c == 0 {
-        return n_c;
-    }
+fn solve2(a: usize, b: usize, c: usize, n: usize) -> usize {
+    // Aを最大で何枚使えるかどうか
+    let max_q_a = cmp::min(n / a, 9999);
+    let mut min = 0;
 
-    let (n_a, n_b, n_c) = div_abc(r_c, b, c, n_c, a);
-    n_a + n_b + n_c
-}
-
-fn div_ab(p: usize, a: usize, b: usize, n_b: usize) -> Option<(usize, usize)> {
-    // aで割る
-    let r = p % a;
-    // 割り切れればOK
-    if r == 0 {
-        return Some((p / a, n_b));
-    }
-
-    // b, aの組み合わせを変えても割り切れなかった場合
-    if n_b == 0 {
-        return None;
-    }
-
-    // 割り切れなければbの商を-1して再帰
-    div_ab(p + b, a, b, n_b - 1)
-}
-
-fn div_abc(p: usize, b: usize, c: usize, n_c: usize, a: usize) -> (usize, usize, usize) {
-    // bで割れるだけ割る
-    let r = p % b;
-    let n_b = p / b;
-    if r == 0 {
-        // 割れたらOK
-        return (0, n_b, n_c);
-    }
-
-    // あまったら、aで割れるかtry
-    let n_a_option = div_ab(r, a, b, n_b);
-    match n_a_option {
-        // 割れればOK
-        Some((n_a, n_b)) => (n_a, n_b, n_c),
-        None => {
-            // どこかで必ず割り切れるはず。。
-            if n_c == 0 {
-                panic!("n_c == 0")
+    for q_a in 0..(max_q_a + 1) {
+        let rest = n - q_a * a;
+        match solve_bc(b, c, rest) {
+            Some(q_bc) => {
+                let q = q_bc + q_a;
+                if min == 0 || min > q {
+                    min = q;
+                };
             }
-
-            // いけなかったらcの商を-1して再帰
-            div_abc(p + c, b, c, n_c - 1, a)
+            None => {
+                continue;
+            }
         }
+    };
+
+    if min == 0 {
+        panic!("cannot be solved")
     }
+
+    min
+}
+
+fn solve_bc(b: usize, c: usize, n: usize) -> Option<usize> {
+    // Bを最大で何枚使えるかどうか
+    let max_q_b = cmp::min(n / b, 9999);
+    let mut min: Option<usize> = None;
+
+    for q_b in 0..(max_q_b + 1) {
+        let rest = n - q_b * b;
+        match solve_c(c, rest) {
+            Some(q_c) => {
+                let q = q_c + q_b;
+                match min {
+                    Some(m) => { if m > q { min = Some(q) } }
+                    None => { min = Some(q) }
+                }
+            }
+            None => {
+                continue;
+            }
+        }
+    };
+
+    min
+}
+
+fn solve_c(c: usize, n: usize) -> Option<usize> {
+    // cで割る
+    let r = n % c;
+    let q = n / c;
+    // 割り切れればOK
+    if r == 0 && q <= 9999 {
+        return Some(q);
+    }
+
+    None
 }
