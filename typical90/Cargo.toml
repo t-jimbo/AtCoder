@@ -36,6 +36,10 @@ name = "16"
 path = "src/16_min_coins.rs"
 
 [[bin]]
+name = "18"
+path = "src/18_statue.rs"
+
+[[bin]]
 name = "22"
 path = "src/22_cubic_cake.rs"
 
