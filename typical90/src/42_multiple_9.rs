@@ -10,40 +10,25 @@ fn main() {
         return;
     }
 
-    // i桁で各桁の合計がjになる場合の数
-    let mut dp: Vec<Vec<usize>> = vec![vec![]; k];
+    // 各桁の合計がiになるのが何通りあるかの漸化式を考える
+    let mut dp: Vec<usize> = vec![];
 
-
-    for i in 0..k {
-        for j in 0..k {
-            if i == 0 {
-                dp[i].push(if j < 9 { 1 } else { 0 });
-                continue;
-            }
-
-            // 合計値 < 桁数 になることはない
-            if j < i {
-                dp[i].push(0);
-                continue;
-            }
-
-            let mut count = 0;
-            for l in start_l(j)..j {
-                count = mod7(count + dp[i - 1][l]);
-            }
-            dp[i].push(count);
+    for i in 0..(k + 1) {
+        if i == 0 {
+            dp.push(1); // 合計が0のパターン
+            continue;
         }
-    }
-
-    let mut ans = 0;
-    for i in 0..k {
-        ans = mod7(ans + dp[i][k - 1])
+        // 合計がkになるのは、合計がk-9 ~ k-1のときに、9~1を選んだ場合
+        let mut count = 0;
+        for j in 1..10 {
+            if i >= j {
+                count = mod7(count + dp[i - j]);
+            }
+        }
+        dp.push(count);
     };
-    println!("{}", ans)
-}
 
-fn start_l(j: usize) -> usize {
-    if j < 9 { 0 } else { j - 9 }
+    println!("{}", dp[k])
 }
 
 const MOD: usize = 1000000007;
