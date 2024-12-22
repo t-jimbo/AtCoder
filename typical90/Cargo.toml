@@ -55,6 +55,10 @@ path = "src/22_cubic_cake.rs"
 name = "24"
 path = "src/24_select_one.rs"
 
+[[bin]]
+name = "42"
+path = "src/42_multiple_9.rs"
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
