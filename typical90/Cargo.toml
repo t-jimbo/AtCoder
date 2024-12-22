@@ -24,6 +24,10 @@ name = "07"
 path = "src/07_cp_classes.rs"
 
 [[bin]]
+name = "08"
+path = "src/08_at_counter.rs"
+
+[[bin]]
 name = "10"
 path = "src/10_store_sum_queries.rs"
 
