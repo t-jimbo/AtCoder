@@ -4,6 +4,6 @@ fn main() {
     input! {
 
     }
-    
+
     println!("Hello, world!");
 }
