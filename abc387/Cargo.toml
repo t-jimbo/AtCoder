@@ -1,0 +1,13 @@
+[package]
+name = "abc387"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "a"
+path = "src/a.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+proconio = "0.5.0"
