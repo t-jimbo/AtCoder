@@ -2,8 +2,11 @@ use proconio::input;
 
 fn main() {
     input! {
-
+        a: usize,
+        b: usize,
     }
-    
-    println!("Hello, world!");
+
+    let ans = (a + b).pow(2);
+
+    println!("{}", ans);
 }
