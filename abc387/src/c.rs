@@ -1,6 +1,4 @@
-use core::ffi::c_ptrdiff_t;
 use proconio::input;
-use std::cmp;
 
 fn main() {
     input! {
@@ -8,61 +6,56 @@ fn main() {
         r: usize,
     }
 
-    let l_digits: Vec<usize> = l.to_string().chars().map(|c| c.to_digit(10).unwrap() as usize).collect();
-    let r_digits: Vec<usize> = r.to_string().chars().map(|c| c.to_digit(10).unwrap() as usize).collect();
-    let l_digit_len = l_digits.len(); // 最大見る桁数
-    let r_digit_len = r_digits.len(); // 最大見る桁数
-    let l_first = l_digits[0];
-    let r_first = r_digits[0];
+    println!("{}", count(r) - count(l - 1));
+}
 
-    let mut count = 0;
+// どうせ差を取るので、非負整数全てカウントする
+fn count(x: usize) -> usize {
+    let digits: Vec<usize> = x.to_string().chars().map(|c| c.to_digit(10).unwrap() as usize).collect();
+    let n = digits.len();
+    let first = digits[0];
 
-    // lの桁~rの桁までを走査する
-    for d in l_digit_len..=r_digit_len {
-        // 先頭の数
-        for i in 1..=9 {
-            // d桁で、iから始まる数で、lからrの間のsnake_numが何個あるか。
-
-            // lと同じ桁の場合
-            if d == l_digit_len {
-                if i < l_first {
-                    // 先頭がlの先頭より小さいなら見なくてOK
-                    continue;
-                }
-                if i == l_first {
-                    // 
-                    let mut r_count = 1;
-                    for dr in 1..r_digit_len {
-                        let m = cmp::min(r_first, r_digits[dr]);
-                        r_count *= m;
-                    }
-                    count += r_count;
-                    continue;
-                }
-            }
-
-            // rと同じ桁の場合
-            if d == r_digit_len {
-                if i > r_first {
-                    // 先頭の位が大きい場合は終了
-                    break;
-                }
-                if i == r_first {
-                    // rの各桁と、iよりも小さい数を数える。
-                    let mut r_count = 1;
-                    for dr in 1..r_digit_len {
-                        let m = cmp::min(r_first, r_digits[dr]);
-                        r_count *= m;
-                    }
-                    count += r_count;
-                    continue;
-                }
-            }
-
-            // countする
-            count += (i.pow(d));
+    // n桁未満の場合
+    // Σk=1,n-2(Σl=1,9(l^k))
+    let mut smaller_digits_count: usize = 0;
+    for k in 1..n - 1 {
+        for l in 1..=9 {
+            smaller_digits_count += (l as u32).pow(k as u32) as usize;
         }
     }
 
-    println!("{}", count);
+    // n桁の場合は桁dp
+    // i桁, is_tight, 先頭がj
+    let mut dp: Vec<Vec<Vec<usize>>> = vec![vec![vec![0; first + 1]; 2]; n];
+
+    for i in 0..n {
+        // i桁目までを考える
+        for j in 1..=first {
+            // 初期値
+            if i == 0 {
+                if j == first { // tight
+                    dp[i][1][j] = 1;
+                } else {
+                    dp[i][0][j] = 1;
+                }
+            } else {
+                if j == first { // 先頭が一致 = tightの可能性がある
+                    let d = digits[i];
+                    let is_tight: usize = if dp[i - 1][1][j] == 1 && d < first { 1 } else { 0 };
+                    dp[i][0][j] = dp[i - 1][0][j] * j + dp[i - 1][1][j] * (if is_tight == 1 { d } else { j });
+                    dp[i][1][j] = is_tight;
+                } else {
+                    // より小さい場合(=tightではない)
+                    dp[i][0][j] = dp[i - 1][0][j] * j;
+                }
+            }
+        }
+    }
+
+    let mut tight_digits_count = 0;
+    for j in 1..=first {
+        tight_digits_count += dp[n][0][j] + dp[n][1][j];
+    }
+
+    smaller_digits_count + tight_digits_count
 }
