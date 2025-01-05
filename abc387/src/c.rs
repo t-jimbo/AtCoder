@@ -9,9 +9,13 @@ fn main() {
     println!("{}", count(r) - count(l - 1));
 }
 
-// どうせ差を取るので、非負整数全てカウントする
+fn pow(a: usize, b: usize) -> usize {
+    (a as u64).pow(b as u32) as usize
+}
+
+// x以下の蛇数
 fn count(x: usize) -> usize {
-    // 10未満は0を返す
+    // 10未満の場合は0を返す
     if x < 10 {
         return 0;
     }
@@ -20,47 +24,39 @@ fn count(x: usize) -> usize {
     let n = digits.len();
     let first = digits[0];
 
-    // n桁未満の場合
+    let mut count: usize = 0;
+
+    // n桁未満のカウント
     // Σk=1,n-2(Σl=1,9(l^k))
-    let mut smaller_digits_count: usize = 0;
     for k in 1..n - 1 {
         for l in 1..=9 {
-            smaller_digits_count += (l as u64).pow(k as u32) as usize;
+            count += pow(l, k);
         }
     }
 
-    // n桁の場合は桁dp
-    // i桁, is_tight, 先頭がj
-    let mut dp: Vec<Vec<Vec<usize>>> = vec![vec![vec![0; first + 1]; 2]; n];
+    // n桁かつ、1~xの先頭の値未満をカウント
+    for j in 1..first {
+        count += pow(j, n - 1);
+    }
+
+    // n桁の場合は桁dpする
+    // i桁目まで見る, is_tight
+    let mut dp: Vec<Vec<usize>> = vec![vec![0; 2]; n];
 
     for i in 0..n {
-        // i桁目までを考える
-        for j in 1..=first {
-            // 初期値
-            if i == 0 {
-                if j == first { // tight
-                    dp[i][1][j] = 1;
-                } else {
-                    dp[i][0][j] = 1;
-                }
-            } else {
-                if j == first { // 先頭が一致 = tightの可能性がある
-                    let d = digits[i];
-                    let is_tight: usize = if dp[i - 1][1][j] == 1 && d < first { 1 } else { 0 };
-                    dp[i][0][j] = dp[i - 1][0][j] * j + dp[i - 1][1][j] * (if is_tight == 1 { d } else { j });
-                    dp[i][1][j] = is_tight;
-                } else {
-                    // より小さい場合(=tightではない)
-                    dp[i][0][j] = dp[i - 1][0][j] * j;
-                }
-            }
+        // 初期値
+        if i == 0 {
+            dp[i][1] = 1;
+            continue;
         }
-    }
 
-    let mut tight_digits_count = 0;
-    for j in 1..=first {
-        tight_digits_count += dp[n - 1][0][j] + dp[n - 1][1][j];
+        // i桁目までを考える
+        let d = digits[i]; // xのi桁目
+        let is_tight: usize = if dp[i - 1][1] == 1 && d < first { 1 } else { 0 }; // 前の値がtightかつ、蛇数である
+        dp[i][0] = dp[i - 1][0] * first + dp[i - 1][1] * (if is_tight == 1 { d } else { first }); // smallerになる
+        dp[i][1] = is_tight; // tightになりつづける
     }
+    count += dp[n - 1][0] + dp[n - 1][1];
 
-    smaller_digits_count + tight_digits_count
+    count
 }
