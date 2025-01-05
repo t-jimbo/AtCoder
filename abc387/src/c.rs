@@ -54,7 +54,7 @@ fn count(x: usize) -> usize {
 
     let mut tight_digits_count = 0;
     for j in 1..=first {
-        tight_digits_count += dp[n][0][j] + dp[n][1][j];
+        tight_digits_count += dp[n - 1][0][j] + dp[n - 1][1][j];
     }
 
     smaller_digits_count + tight_digits_count
