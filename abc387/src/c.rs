@@ -20,7 +20,7 @@ fn count(x: usize) -> usize {
     let mut smaller_digits_count: usize = 0;
     for k in 1..n - 1 {
         for l in 1..=9 {
-            smaller_digits_count += (l as u32).pow(k as u32) as usize;
+            smaller_digits_count += (l as u64).pow(k as u32) as usize;
         }
     }
 
