@@ -11,6 +11,11 @@ fn main() {
 
 // どうせ差を取るので、非負整数全てカウントする
 fn count(x: usize) -> usize {
+    // 10未満は0を返す
+    if x < 10 {
+        return 0;
+    }
+
     let digits: Vec<usize> = x.to_string().chars().map(|c| c.to_digit(10).unwrap() as usize).collect();
     let n = digits.len();
     let first = digits[0];
