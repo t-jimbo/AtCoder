@@ -2,6 +2,7 @@ use proconio::input;
 use std::collections::HashMap;
 
 type Houses = HashMap<isize, Vec<isize>>;
+type VisitedMap = HashMap<(isize, isize), bool>;
 
 fn main() {
     input! {
@@ -15,7 +16,7 @@ fn main() {
 
     let mut x_houses: Houses = HashMap::new();
     let mut y_houses: Houses = HashMap::new();
-    let mut count = 0;
+    let mut visited: VisitedMap = HashMap::new();
 
     // 前処理
     for (x, y) in xy.iter() {
@@ -40,19 +41,19 @@ fn main() {
     for (d, c) in dc.iter() {
         match d {
             'U' => {
-                count += count_houses(&mut x_houses, &sx, sy + 1, sy + c);
+                count_houses(&x_houses, &mut visited, true, &sx, sy + 1, sy + c);
                 sy += c;
             }
             'D' => {
-                count += count_houses(&mut x_houses, &sx, sy - c, sy - 1);
+                count_houses(&x_houses, &mut visited, true, &sx, sy - c, sy - 1);
                 sy -= c;
             }
             'L' => {
-                count += count_houses(&mut y_houses, &sy, sx - c, sx - 1);
+                count_houses(&y_houses, &mut visited, false, &sy, sx - c, sx - 1);
                 sx -= c;
             }
             'R' => {
-                count += count_houses(&mut y_houses, &sy, sx + 1, sy + c);
+                count_houses(&y_houses, &mut visited, false, &sy, sx + 1, sy + c);
                 sx += c;
             }
             _ => {
@@ -61,25 +62,25 @@ fn main() {
         }
     }
 
-    println!("{} {} {}", sx, sy, count);
+    println!("{} {} {}", sx, sy, visited.len());
 }
 
-fn count_houses(houses: &mut Houses, base: &isize, l: isize, r: isize) -> usize {
-    let mut count: usize = 0;
-    match houses.get_mut(base) {
+fn count_houses(houses: &Houses, visited: &mut VisitedMap, is_x: bool, base: &isize, l: isize, r: isize) {
+    match houses.get(base) {
         Some(v) => {
-            let v_read = v.clone();
-            for i in 0..v.len() {
-                let h = v_read[i];
-                if l <= h && h <= r {
+            for point in v {
+                if l <= *point && *point <= r {
                     // 移動する範囲内に家がある場合
-                    println!("house: {}, {}", base, h);
-                    count += 1;
-                    v.remove(i); // 訪問済みの場合popする
+                    let h_point = if is_x { (*base, *point) } else { (*point, *base) };
+                    if visited.contains_key(&h_point) {
+                        // 訪問済みはskip
+                        continue;
+                    }
+
+                    visited.insert(h_point, true);
                 }
             }
         }
         None => {} // 家を通過しない
     };
-    count
 }
