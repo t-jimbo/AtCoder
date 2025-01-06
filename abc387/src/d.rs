@@ -1,4 +1,5 @@
 use proconio::{input, marker::Chars};
+use std::cmp::min;
 use std::collections::{HashMap, VecDeque};
 
 type Position = (usize, usize);
@@ -46,13 +47,9 @@ fn main() {
     }
 
     let res1 = bfs(g1, start, goal);
-    if res1 > -1 {
-        println!("{}", res1);
-        return;
-    }
-
     let res2 = bfs(g2, start, goal);
-    println!("{}", res2);
+
+    println!("{}", min(res1, res2));
 }
 
 fn bfs(g: Graph, start: Position, goal: Position) -> isize {
@@ -67,17 +64,15 @@ fn bfs(g: Graph, start: Position, goal: Position) -> isize {
             Some(p) => {
                 let step = visited.get(&p).unwrap() + 1;
                 for next in g[p.0][p.1].iter() {
-                    if next.0 == goal.0 && next.1 == goal.1 {
-                        return step;
-                    }
-
                     if !visited.contains_key(next) {
                         queue.push_back(*next);
                         visited.insert(*next, step);
                     }
                 }
             }
-            None => { return -1; }
+            None => { break; }
         }
-    }
+    };
+
+    *visited.get(&goal).unwrap_or(&-1)
 }
