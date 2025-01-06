@@ -49,6 +49,16 @@ fn main() {
     let res1 = bfs(g1, start, goal);
     let res2 = bfs(g2, start, goal);
 
+    if res1 == -1 {
+        println!("{}", res2);
+        return;
+    }
+
+    if res2 == -1 {
+        println!("{}", res1);
+        return;
+    }
+
     println!("{}", min(res1, res2));
 }
 
