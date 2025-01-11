@@ -13,5 +13,9 @@ path = "src/a.rs"
 name = "b"
 path = "src/b.rs"
 
+[[bin]]
+name = "c"
+path = "src/c.rs"
+
 [dependencies]
 proconio = "0.5.0"
