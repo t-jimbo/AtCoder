@@ -1,29 +1,25 @@
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 fn main() {
     input! {
-        n: usize,
-        m: usize,
-        mut a: [usize; m],
+        s: Chars
     }
 
-    a.sort_by(|a, b| a.cmp(b));
+    let n = s.len();
+    let mut ans = 0;
 
-    let mut k: usize = 0;
-    let mut res: Vec<usize> = Vec::new();
-    for i in 1..=n {
-        if i < a[k] {
-            res.push(i);
-        } else if i == a[k] {
-            if k + 1 == m {
-                continue;
+    for i in 0..(n - 2) {
+        if s[i] != 'A' {
+            continue;
+        }
+
+        let max_d = (n - i - 1) / 2;
+        for d in 1..=max_d {
+            if s[i + d] == 'B' && s[i + 2 * d] == 'C' {
+                ans += 1;
             }
-            k += 1;
-        } else {
-            res.push(i);
         }
     }
 
-    println!("{}", res.len());
-    println!("{}", res.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(" "));
+    println!("{}", ans);
 }
