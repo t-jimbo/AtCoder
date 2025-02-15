@@ -1,16 +1,31 @@
+use num::integer::gcd;
 use proconio::input;
-use std::collections::HashMap;
 
 fn main() {
     input! {
         n: usize,
-        m: usize,
-        ab: [(usize, usize); m],
+        k: usize,
+        a: [usize; n],
     }
 
-    let mut graph: Vec<Vec<usize>> = vec![vec![]; n];
-    for (a, b) in ab {
-        graph[a - 1].push(b - 1);
-        graph[b - 1].push(a - 1);
+    let mut gcd_graph = vec![vec![0; n]; n];
+    for i in 0..n {
+        for j in i + 1..n {
+            gcd_graph[i][j] = gcd(a[i], a[j]);
+            gcd_graph[j][i] = gcd_graph[i][j];
+        }
     }
+
+    for i in 0..n {
+        let mut gcds = gcd_graph[i];
+        // desc sort
+        gcds.sort_by(|a, b| b.cmp(a));
+        let mut max_gcd = 1;
+        let mut taken = 0;
+        for j in 0..k {
+            max_gcd = gcd(max_gcd, gcds[j]);
+        }
+    }
+
+    println!("{:?}", gcd_graph);
 }
