@@ -1,19 +1,31 @@
 use proconio::input;
+use std::collections::HashSet;
 
 fn main() {
     input! {
-        n: usize,
-        p: [usize; n],
-        q: [usize; n],
+        _n: usize,
+        m: usize,
+        uv: [(usize, usize); m],
     }
 
-    let mut pq: Vec<(usize, usize)> = p.iter().zip(q.iter()).map(|(&pi, &qi)| (pi, qi)).collect();
-    pq.sort_by_key(|&(_, qi)| qi);
+    let mut set = HashSet::new();
+    let mut ans = 0;
 
-    let mut res: Vec<usize> = Vec::new();
-    for (pi, _) in pq {
-        res.push(q[pi - 1]);
+    for (u, v) in uv {
+        if u == v {
+            // self loop
+            ans += 1;
+            continue;
+        }
+
+        let key = if u > v { (v, u) } else { (u, v) };
+        if !set.contains(&key) {
+            set.insert(key);
+        } else {
+            // multi edge
+            ans += 1;
+        }
     }
 
-    println!("{}", res.iter().map(|&x| x.to_string()).collect::<Vec<String>>().join(" "));
+    println!("{}", ans);
 }
