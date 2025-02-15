@@ -2,14 +2,21 @@ use proconio::input;
 
 fn main() {
     input! {
-        a1: usize,
-        a2: usize,
-        a3: usize,
+        s1: String,
+        s2: String,
     }
 
-    if a1 * a2 == a3 || a2 * a3 == a1 || a3 * a1 == a2 {
-        println!("Yes");
+    if s1 == "sick" {
+        if s2 == "sick" {
+            println!("1");
+        } else {
+            println!("2");
+        }
     } else {
-        println!("No");
+        if s2 == "sick" {
+            println!("3");
+        } else {
+            println!("4");
+        }
     }
 }
