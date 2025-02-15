@@ -13,7 +13,7 @@ fn main() {
         match s[i] {
             '1' => {
                 j += 1;
-                if i == 0 || i == n - 1 {
+                if i == 0 || i == n - 1 || s[i - 1] == '1' {
                     zero.push(0);
                 }
             }
