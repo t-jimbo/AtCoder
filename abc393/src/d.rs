@@ -1,52 +1,41 @@
-use proconio::input;
-use std::collections::HashMap;
+use proconio::{input, marker::Chars};
 
 fn main() {
     input! {
         n: usize,
+        s: Chars,
     }
 
-    let mut freq_map: Vec<HashMap<usize, usize>> = Vec::new();
-    let mut kn: Vec<f64> = Vec::new();
-
-    for _ in 0..n {
-        input! {
-            k: usize,
-            a: [usize; k],
-        }
-        kn.push(k as f64);
-
-        let mut count: HashMap<usize, usize> = HashMap::new();
-        for num in a {
-            *count.entry(num).or_insert(0) += 1;
-        }
-
-        freq_map.push(count);
-    }
-
-    // max9900通り
-    let mut max_p = 0.0;
+    let mut ans = 0;
+    let mut j = 0; // 1 count
+    let mut zero: Vec<usize> = Vec::new();
     for i in 0..n {
-        for j in i + 1..n {
-            let mut p = 0.0;
-
-            let ki = kn[i];
-            let kj = kn[j];
-            // 短いループになるほうを選択
-            let (s, t) = if ki < kj { (i, j) } else { (j, i) };
-
-            for (num, &cs) in &freq_map[s] {
-                if let Some(&ct) = freq_map[t].get(num) {
-                    p += cs as f64 / ki * ct as f64 / kj;
+        match s[i] {
+            '1' => {
+                j += 1;
+                if i == 0 || i == n - 1 {
+                    zero.push(0);
                 }
             }
-
-            if max_p < p {
-                max_p = p;
+            '0' => {
+                if zero.len() == j {
+                    zero.push(1)
+                } else {
+                    zero[j] += 1
+                }
             }
+            _ => unreachable!(),
         }
     }
 
+    let m = j / 2;
+    for i in 1..zero.len() - 1 {
+        if i <= m {
+            ans += zero[i] * i;
+        } else {
+            ans += zero[i] * (j - i);
+        }
+    }
 
-    println!("{}", max_p);
+    println!("{}", ans);
 }
