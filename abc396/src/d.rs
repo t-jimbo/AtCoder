@@ -1,5 +1,5 @@
 use proconio::input;
-use std::cmp::min;
+use std::collections::VecDeque;
 
 fn main() {
     input! {
@@ -17,7 +17,7 @@ fn main() {
 
     let mut xor: Vec<Option<usize>> = vec![None; n];
 
-    let mut queue = std::collections::VecDeque::new();
+    let mut queue = VecDeque::new();
     queue.push_back(0);
     xor[0] = Some(0);
 
