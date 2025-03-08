@@ -1,25 +1,33 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
 
 fn main() {
     input! {
-        s: Chars
+        q: usize,
     }
 
-    let n = s.len();
-    let mut ans = 0;
-
-    for i in 0..(n - 2) {
-        if s[i] != 'A' {
-            continue;
+    let mut stack = Vec::new();
+    for _ in 0..q {
+        input! {
+            c: usize,
         }
 
-        let max_d = (n - i - 1) / 2;
-        for d in 1..=max_d {
-            if s[i + d] == 'B' && s[i + 2 * d] == 'C' {
-                ans += 1;
+        match c {
+            1 => {
+                input! {
+                    x: usize,
+                }
+                stack.push(x);
+            }
+            2 => {
+                if let Some(x) = stack.pop() {
+                    println!("{}", x);
+                } else {
+                    println!("0");
+                }
+            }
+            _ => {
+                panic!("Invalid input");
             }
         }
     }
-
-    println!("{}", ans);
 }
