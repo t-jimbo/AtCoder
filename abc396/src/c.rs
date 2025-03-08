@@ -1,31 +1,32 @@
 use proconio::input;
-use std::collections::HashSet;
+use std::cmp::max;
 
 fn main() {
     input! {
-        _n: usize,
+        n: usize,
         m: usize,
-        uv: [(usize, usize); m],
+        mut b: [isize; n],
+        mut w: [isize; m],
     }
 
-    let mut set = HashSet::new();
-    let mut ans = 0;
+    b.sort_by(|a, b| b.cmp(a));
+    w.sort_by(|a, b| b.cmp(a));
 
-    for (u, v) in uv {
-        if u == v {
-            // self loop
-            ans += 1;
-            continue;
-        }
+    let mut dp = vec![0; n + 1];
 
-        let key = if u > v { (v, u) } else { (u, v) };
-        if !set.contains(&key) {
-            set.insert(key);
+    for i in 0..n {
+        let diff = if i < m {
+            max(max(0, b[i]), b[i] + w[i])
         } else {
-            // multi edge
-            ans += 1;
+            max(0, b[i])
+        };
+
+        if diff == 0 {
+            println!("{}", dp[i]);
+            return;
+        } else {
+            dp[i + 1] = dp[i] + diff;
         }
     }
-
-    println!("{}", ans);
+    println!("{}", dp[n]);
 }
