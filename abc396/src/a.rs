@@ -2,21 +2,28 @@ use proconio::input;
 
 fn main() {
     input! {
-        s1: String,
-        s2: String,
+        n: usize,
+        a: [usize; n],
     }
 
-    if s1 == "sick" {
-        if s2 == "sick" {
-            println!("1");
-        } else {
-            println!("2");
+    let mut count = 0;
+    for i in 0..n {
+        if i == 0 {
+            count += 1;
+            continue;
         }
-    } else {
-        if s2 == "sick" {
-            println!("3");
+
+        if a[i] == a[i - 1] {
+            count += 1;
         } else {
-            println!("4");
+            count = 1;
+        }
+
+        if count >= 3 {
+            println!("Yes");
+            return;
         }
     }
+
+    println!("No");
 }
