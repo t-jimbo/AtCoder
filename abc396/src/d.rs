@@ -1,41 +1,41 @@
-use proconio::{input, marker::Chars};
+use proconio::input;
+use std::cmp::min;
 
 fn main() {
     input! {
         n: usize,
-        s: Chars,
+        m: usize,
+        uvw: [(usize, usize, usize); m],
     }
 
-    let mut ans = 0;
-    let mut j = 0; // 1 count
-    let mut zero: Vec<usize> = Vec::new();
-    for i in 0..n {
-        match s[i] {
-            '1' => {
-                j += 1;
-                if i == 0 || i == n - 1 || s[i - 1] == '1' {
-                    zero.push(0);
+    let mut graph = vec![Vec::new(); n];
+
+    for (u, v, w) in uvw {
+        graph[u - 1].push((v - 1, w));
+        graph[v - 1].push((u - 1, w));
+    }
+
+    let mut xor: Vec<Option<usize>> = vec![None; n];
+
+    let mut queue = std::collections::VecDeque::new();
+    queue.push_back(0);
+    xor[0] = Some(0);
+
+    while let Some(u) = queue.pop_front() {
+        for &(v, w) in &graph[u] {
+            if xor[v].is_none() {
+                xor[v] = Some(xor[u].unwrap() ^ w);
+                queue.push_back(v);
+            } else {
+                let xor_v = xor[v].unwrap();
+                let new = min(xor_v, xor[u].unwrap() ^ w);
+                if new != xor_v {
+                    xor[v] = Some(new);
+                    queue.push_back(v);
                 }
             }
-            '0' => {
-                if zero.len() == j {
-                    zero.push(1)
-                } else {
-                    zero[j] += 1
-                }
-            }
-            _ => unreachable!(),
         }
     }
 
-    let m = j / 2;
-    for i in 1..zero.len() - 1 {
-        if i <= m {
-            ans += zero[i] * i;
-        } else {
-            ans += zero[i] * (j - i);
-        }
-    }
-
-    println!("{}", ans);
+    println!("{:?}", xor);
 }
