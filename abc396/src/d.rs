@@ -1,4 +1,6 @@
 use proconio::input;
+use std::cmp::min;
+use std::collections::HashSet;
 use std::collections::VecDeque;
 
 fn main() {
@@ -9,33 +11,32 @@ fn main() {
     }
 
     let mut graph = vec![Vec::new(); n];
-
     for (u, v, w) in uvw {
         graph[u - 1].push((v - 1, w));
         graph[v - 1].push((u - 1, w));
     }
 
-    let mut xor: Vec<Option<usize>> = vec![None; n];
+    let mut stack: VecDeque<(usize, usize, HashSet<usize>)> = VecDeque::new();
+    stack.push_back((0, 0, HashSet::new()));
 
-    let mut queue = VecDeque::new();
-    queue.push_back(0);
-    xor[0] = Some(0);
+    let mut min_w = None;
 
-    while let Some(u) = queue.pop_front() {
-        for &(v, w) in &graph[u] {
-            if xor[v].is_none() {
-                xor[v] = Some(xor[u].unwrap() ^ w);
-                queue.push_back(v);
-            } else {
-                let xor_v = xor[v].unwrap();
-                let new = min(xor_v, xor[u].unwrap() ^ w);
-                if new != xor_v {
-                    xor[v] = Some(new);
-                    queue.push_back(v);
+    while let Some((node, total_w, mut visited)) = stack.pop_front() {
+        for &(v, w) in &graph[node] {
+            if visited.contains(&v) {
+                continue;
+            }
+            if v == n - 1 {
+                if min_w.is_none() {
+                    min_w = Some(total_w ^ w);
+                } else {
+                    min_w = Some(min(min_w.unwrap(), total_w ^ w));
                 }
             }
+            visited.insert(node);
+            stack.push_back((v, total_w ^ w, visited.clone()));
         }
     }
 
-    println!("{:?}", xor);
+    println!("{}", min_w.unwrap());
 }
