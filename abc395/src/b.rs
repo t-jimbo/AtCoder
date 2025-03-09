@@ -2,32 +2,85 @@ use proconio::input;
 
 fn main() {
     input! {
-        q: usize,
+        n: usize,
     }
 
-    let mut stack = Vec::new();
-    for _ in 0..q {
-        input! {
-            c: usize,
-        }
-
-        match c {
-            1 => {
-                input! {
-                    x: usize,
-                }
-                stack.push(x);
-            }
-            2 => {
-                if let Some(x) = stack.pop() {
-                    println!("{}", x);
+    let m = n / 2;
+    for i in 0..n {
+        for j in 0..n {
+            if i < m {
+                // top half
+                if j < m {
+                    // left half
+                    if j < i {
+                        // outer
+                        if j % 2 == 0 {
+                            print!("#")
+                        } else {
+                            print!(".")
+                        }
+                    } else {
+                        // inner
+                        if i % 2 == 0 {
+                            print!("#")
+                        } else {
+                            print!(".")
+                        }
+                    }
                 } else {
-                    println!("0");
+                    // right half
+                    if n - j <= i + 1 {
+                        if (n - j) % 2 == 0 {
+                            print!(".")
+                        } else {
+                            print!("#")
+                        }
+                    } else {
+                        if i % 2 == 0 {
+                            print!("#")
+                        } else {
+                            print!(".")
+                        }
+                    }
+                }
+            } else {
+                // bottom half
+                if j < m {
+                    // left half
+                    if j < n - i {
+                        // outer
+                        if j % 2 == 0 {
+                            print!("#")
+                        } else {
+                            print!(".")
+                        }
+                    } else {
+                        // inner
+                        if (n - i) % 2 == 0 {
+                            print!(".")
+                        } else {
+                            print!("#")
+                        }
+                    }
+                } else {
+                    // right half
+                    if i <= j {
+                        // outer
+                        if (n - j) % 2 == 0 {
+                            print!(".")
+                        } else {
+                            print!("#")
+                        }
+                    } else {
+                        if (n - i) % 2 == 0 {
+                            print!(".")
+                        } else {
+                            print!("#")
+                        }
+                    }
                 }
             }
-            _ => {
-                panic!("Invalid input");
-            }
         }
+        println!();
     }
 }
