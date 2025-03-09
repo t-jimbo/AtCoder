@@ -1,32 +1,27 @@
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 fn main() {
     input! {
-        q: usize,
+        n: usize,
+        m: usize,
+        s: [Chars; n],
+        t: [Chars; m],
     }
 
-    let mut stack = Vec::new();
-    for _ in 0..q {
-        input! {
-            c: usize,
-        }
-
-        match c {
-            1 => {
-                input! {
-                    x: usize,
-                }
-                stack.push(x);
-            }
-            2 => {
-                if let Some(x) = stack.pop() {
-                    println!("{}", x);
-                } else {
-                    println!("0");
+    for i in 0..n - m + 1 {
+        for j in 0..n - m + 1 {
+            let mut ok = true;
+            for k in 0..m {
+                for l in 0..m {
+                    if s[i + k][j + l] != t[k][l] {
+                        ok = false;
+                        break;
+                    }
                 }
             }
-            _ => {
-                panic!("Invalid input");
+            if ok {
+                println!("{} {}", i + 1, j + 1);
+                return;
             }
         }
     }
