@@ -1,32 +1,39 @@
 use proconio::input;
-use std::cmp::max;
+use std::collections::HashMap;
 
 fn main() {
     input! {
         n: usize,
-        m: usize,
-        mut b: [isize; n],
-        mut w: [isize; m],
+        a: [usize; n],
     }
 
-    b.sort_by(|a, b| b.cmp(a));
-    w.sort_by(|a, b| b.cmp(a));
+    let counts: HashMap<usize, Vec<usize>> = a.iter().enumerate().fold(HashMap::new(), |mut acc, (i, &x)| {
+        acc.entry(x).or_insert(vec![]).push(i);
+        acc
+    });
 
-    let mut dp = vec![0; n + 1];
+    let mut min = None;
+    for (_, v) in counts.iter() {
+        if v.len() == 1 {
+            continue;
+        }
 
-    for i in 0..n {
-        let diff = if i < m {
-            max(max(0, b[i]), b[i] + w[i])
-        } else {
-            max(0, b[i])
-        };
+        let mut min_i = None;
+        for i in 0..v.len() - 1 {
+            let diff = v[i + 1] - v[i];
+            if min_i.is_none() || diff < min_i.unwrap() {
+                min_i = Some(diff + 1);
+            }
+        }
 
-        if diff == 0 {
-            println!("{}", dp[i]);
-            return;
-        } else {
-            dp[i + 1] = dp[i] + diff;
+        if min.is_none() || min_i.unwrap() < min.unwrap() {
+            min = min_i;
         }
     }
-    println!("{}", dp[n]);
+
+    if min.is_none() {
+        println!("-1");
+    } else {
+        println!("{}", min.unwrap());
+    }
 }
