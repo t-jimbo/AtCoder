@@ -1,42 +1,50 @@
 use proconio::input;
-use std::cmp::min;
-use std::collections::HashSet;
-use std::collections::VecDeque;
 
 fn main() {
     input! {
         n: usize,
-        m: usize,
-        uvw: [(usize, usize, usize); m],
+        q: usize,
     }
 
-    let mut graph = vec![Vec::new(); n];
-    for (u, v, w) in uvw {
-        graph[u - 1].push((v - 1, w));
-        graph[v - 1].push((u - 1, w));
-    }
+    let mut pigeon_to_ref: Vec<usize> = (0..n).collect();
+    let mut ref_to_nest: Vec<usize> = (0..n).collect();
+    let mut nest_to_ref: Vec<usize> = (0..n).collect();
 
-    let mut stack: VecDeque<(usize, usize, HashSet<usize>)> = VecDeque::new();
-    stack.push_back((0, 0, HashSet::new()));
+    for _ in 0..q {
+        input! {
+            c: usize,
+        }
 
-    let mut min_w = None;
-
-    while let Some((node, total_w, mut visited)) = stack.pop_front() {
-        for &(v, w) in &graph[node] {
-            if visited.contains(&v) {
-                continue;
-            }
-            if v == n - 1 {
-                if min_w.is_none() {
-                    min_w = Some(total_w ^ w);
-                } else {
-                    min_w = Some(min(min_w.unwrap(), total_w ^ w));
+        match c {
+            1 => {
+                input! {
+                    a: usize,
+                    b: usize,
                 }
+                // move pigeon_a to nest_b
+                let r = nest_to_ref[b - 1];
+                pigeon_to_ref[a - 1] = r;
             }
-            visited.insert(node);
-            stack.push_back((v, total_w ^ w, visited.clone()));
+            2 => {
+                input! {
+                    a: usize,
+                    b: usize,
+                }
+                // swap nest a, b
+                let i = nest_to_ref[a - 1];
+                let j = nest_to_ref[b - 1];
+                ref_to_nest.swap(i, j);
+                nest_to_ref.swap(a - 1, b - 1);
+            }
+            3 => {
+                input! {
+                    a: usize,
+                }
+                println!("{}", ref_to_nest[pigeon_to_ref[a - 1]] + 1);
+            }
+            _ => {
+                unreachable!();
+            }
         }
     }
-
-    println!("{}", min_w.unwrap());
 }
