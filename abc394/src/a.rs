@@ -1,22 +1,14 @@
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 fn main() {
     input! {
-        n: usize,
-        a: [usize; n],
+        s: Chars,
     }
 
-    let mut flag = true;
-    for i in 0..n {
-        if i == 0 {
-            continue;
-        }
-
-        if a[i] <= a[i - 1] {
-            flag = false;
-            break;
+    for c in s {
+        if c == '2' {
+            print!("2");
         }
     }
-
-    println!("{}", if flag { "Yes" } else { "No" });
+    println!();
 }
