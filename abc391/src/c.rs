@@ -8,6 +8,7 @@ fn main() {
 
     let mut pigeon_hole: Vec<usize> = (0..n).collect();
     let mut hole_count: Vec<usize> = vec![1; n];
+    let mut count = 0;
 
     for _ in 0..q {
         input! {
@@ -21,17 +22,19 @@ fn main() {
                     h: usize,
                 }
                 let current = pigeon_hole[p - 1];
+                pigeon_hole[p - 1] = h - 1; // update pigeon hole
+
+                // update hole count
                 hole_count[current] -= 1;
+                if hole_count[current] == 1 {
+                    count -= 1;
+                }
                 hole_count[h - 1] += 1;
-                pigeon_hole[p - 1] = h - 1;
+                if hole_count[h - 1] == 2 {
+                    count += 1;
+                }
             }
             2 => {
-                let mut count = 0;
-                for i in 0..n {
-                    if hole_count[i] > 1 {
-                        count += 1;
-                    }
-                }
                 println!("{}", count);
             }
             _ => {
