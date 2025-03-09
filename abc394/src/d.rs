@@ -1,50 +1,43 @@
-use proconio::input;
+use proconio::{input, marker::Chars};
 
 fn main() {
     input! {
-        n: usize,
-        q: usize,
+        s: Chars,
     }
 
-    let mut pigeon_to_ref: Vec<usize> = (0..n).collect();
-    let mut ref_to_nest: Vec<usize> = (0..n).collect();
-    let mut nest_to_ref: Vec<usize> = (0..n).collect();
-
-    for _ in 0..q {
-        input! {
-            c: usize,
-        }
-
+    let mut stack: Vec<char> = Vec::new();
+    for c in s {
         match c {
-            1 => {
-                input! {
-                    a: usize,
-                    b: usize,
-                }
-                // move pigeon_a to nest_b
-                let r = nest_to_ref[b - 1];
-                pigeon_to_ref[a - 1] = r;
+            '(' => {
+                stack.push(c);
             }
-            2 => {
-                input! {
-                    a: usize,
-                    b: usize,
-                }
-                // swap nest a, b
-                let i = nest_to_ref[a - 1];
-                let j = nest_to_ref[b - 1];
-                ref_to_nest.swap(i, j);
-                nest_to_ref.swap(a - 1, b - 1);
+            '[' => {
+                stack.push(c);
             }
-            3 => {
-                input! {
-                    a: usize,
-                }
-                println!("{}", ref_to_nest[pigeon_to_ref[a - 1]] + 1);
+            '<' => {
+                stack.push(c);
             }
-            _ => {
-                unreachable!();
+            p => {
+                if stack.is_empty() {
+                    println!("No");
+                    return;
+                }
+                let q = stack.pop().unwrap();
+                match (q, p) {
+                    ('(', ')') => {}
+                    ('[', ']') => {}
+                    ('<', '>') => {}
+                    _ => {
+                        println!("No");
+                        return;
+                    }
+                }
             }
         }
     }
+    if !stack.is_empty() {
+        println!("No");
+        return;
+    }
+    println!("Yes");
 }
