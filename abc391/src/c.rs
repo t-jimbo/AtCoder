@@ -1,32 +1,42 @@
 use proconio::input;
-use std::cmp::max;
 
 fn main() {
     input! {
         n: usize,
-        m: usize,
-        mut b: [isize; n],
-        mut w: [isize; m],
+        q: usize,
     }
 
-    b.sort_by(|a, b| b.cmp(a));
-    w.sort_by(|a, b| b.cmp(a));
+    let mut pigeon_hole: Vec<usize> = (0..n).collect();
+    let mut hole_count: Vec<usize> = vec![1; n];
 
-    let mut dp = vec![0; n + 1];
+    for _ in 0..q {
+        input! {
+            c: usize,
+        }
 
-    for i in 0..n {
-        let diff = if i < m {
-            max(max(0, b[i]), b[i] + w[i])
-        } else {
-            max(0, b[i])
-        };
-
-        if diff == 0 {
-            println!("{}", dp[i]);
-            return;
-        } else {
-            dp[i + 1] = dp[i] + diff;
+        match c {
+            1 => {
+                input! {
+                    p: usize,
+                    h: usize,
+                }
+                let current = pigeon_hole[p - 1];
+                hole_count[current] -= 1;
+                hole_count[h - 1] += 1;
+                pigeon_hole[p - 1] = h - 1;
+            }
+            2 => {
+                let mut count = 0;
+                for i in 0..n {
+                    if hole_count[i] > 1 {
+                        count += 1;
+                    }
+                }
+                println!("{}", count);
+            }
+            _ => {
+                unreachable!();
+            }
         }
     }
-    println!("{}", dp[n]);
 }
