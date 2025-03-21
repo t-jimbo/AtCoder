@@ -11,14 +11,11 @@ fn main() {
     let mut taros: HashSet<usize> = HashSet::new();
 
     for &(family, gender) in &ab {
-        if gender != 'M' {
+        if gender != 'M' || taros.contains(&family) {
             println!("No");
             continue;
         }
-        if taros.contains(&family) {
-            println!("No");
-            continue;
-        }
+        
         taros.insert(family);
         println!("Yes");
     }
