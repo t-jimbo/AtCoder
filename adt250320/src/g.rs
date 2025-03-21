@@ -28,6 +28,10 @@ fn main() {
                 input! {
                     h: usize,
                 }
+                if time < h {
+                    println!("0");
+                    continue;
+                }
                 let max_time = time - h;
                 let mut count = 0;
                 let mut cut = vec![];
